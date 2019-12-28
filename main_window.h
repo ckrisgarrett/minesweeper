@@ -13,3 +13,4 @@ public slots:
    void button_click();
 };
 
+void display_num_bombs(int num_bombs);

@@ -1,70 +1,8 @@
 #include "mine_widget.h"
+#include "game_logic.h"
 #include <QPainter>
 #include <QMouseEvent>
 #include <QTextStream>
-
-bool bombs[9 * 9];
-bool flagged[9 * 9];
-bool selected[9 * 9];
-
-void reset_game()
-{
-   srand(time(NULL));
-   for (int i = 0; i < 81; i++)
-   {
-      bombs[i] = false;
-      flagged[i] = false;
-      selected[i] = false;
-   }
-
-   for (int i = 0; i < 10; i++)
-   {
-      int index = rand() % 81;
-      bombs[index] = true;
-   }
-}
-
-bool is_selected(int i, int j)
-{
-   if (i < 0 || j < 0 || i > 8 || j > 8)
-      return false;
-
-   return selected[i * 9 + j];
-}
-
-bool is_flagged(int i, int j)
-{
-   if (i < 0 || j < 0 || i > 8 || j > 8)
-      return false;
-
-   return flagged[i * 9 + j];
-}
-
-bool is_bomb(int i, int j)
-{
-   if (i < 0 || j < 0 || i > 8 || j > 8)
-      return false;
-
-   return bombs[i * 9 + j];
-}
-
-int num_adjacent(int i, int j)
-{
-   if (is_bomb(i, j))
-      return -1;
-   
-   int adj = 0;
-   if (is_bomb(i-1, j-1)) adj++;
-   if (is_bomb(i-1, j+0)) adj++;
-   if (is_bomb(i-1, j+1)) adj++;
-   if (is_bomb(i+0, j-1)) adj++;
-   if (is_bomb(i+0, j+1)) adj++;
-   if (is_bomb(i+1, j-1)) adj++;
-   if (is_bomb(i+1, j+0)) adj++;
-   if (is_bomb(i+1, j+1)) adj++;
-
-   return adj;
-}
 
 Mine_Widget::Mine_Widget()
 {
@@ -167,8 +105,8 @@ void Mine_Widget::mouseMoveEvent(QMouseEvent *event)
    {
       c_button_x = button_x;
       c_button_y = button_y;
-      QTextStream out(stdout);
-      out << "Button move: " << c_button_x << " " << c_button_y << endl;
+      //QTextStream out(stdout);
+      //out << "Button move: " << c_button_x << " " << c_button_y << endl;
       update();
    }
 }
@@ -195,15 +133,14 @@ void Mine_Widget::mousePressEvent(QMouseEvent *event)
 
    if (event->button() == Qt::RightButton)
    {
-      flagged[button_x * 9 + button_y] = 
-         !flagged[button_x * 9 + button_y];
+      toggle_flagged(button_x, button_y);
       update();
    }
    if (event->button() == Qt::LeftButton)
    {
-      if (!flagged[button_x * 9 + button_y])
+      if (!is_flagged(button_x, button_y))
       {
-         selected[button_x * 9 + button_y] = true;
+         set_selected(button_x, button_y);
          update();
       }
    }
