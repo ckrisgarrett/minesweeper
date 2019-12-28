@@ -4,13 +4,13 @@
 #include <QMouseEvent>
 #include <QTextStream>
 
+
 Mine_Widget::Mine_Widget()
 {
    this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
    this->setMouseTracking(true);
    c_button_x = -1;
    c_button_y = -1;
-   reset_game();
 }
 
 void Mine_Widget::paintEvent(QPaintEvent *event)
@@ -105,8 +105,6 @@ void Mine_Widget::mouseMoveEvent(QMouseEvent *event)
    {
       c_button_x = button_x;
       c_button_y = button_y;
-      //QTextStream out(stdout);
-      //out << "Button move: " << c_button_x << " " << c_button_y << endl;
       update();
    }
 }

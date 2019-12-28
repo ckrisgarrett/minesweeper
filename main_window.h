@@ -10,7 +10,9 @@ public:
    ~Main_Window();
 
 public slots:
-   void button_click();
+   void reset_button_click();
 };
 
 void display_num_bombs(int num_bombs);
+void game_win();
+void game_lose();

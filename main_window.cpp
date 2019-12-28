@@ -1,14 +1,19 @@
 #include "main_window.h"
+#include "mine_widget.h"
+#include "game_logic.h"
 #include <QPushButton>
 #include <QGridLayout>
 #include <QLCDNumber>
-#include "mine_widget.h"
 
 static QLCDNumber *s_lcd_number;
+static Mine_Widget *s_mine_widget;
 static QPushButton *s_reset_button;
+static Main_Window *s_main_window;
 
 Main_Window::Main_Window()
 {
+   s_main_window = this;
+
    QVBoxLayout *main_layout = new QVBoxLayout();
    QWidget *central_widget = new QWidget();
    central_widget->setLayout(main_layout);
@@ -24,8 +29,8 @@ Main_Window::Main_Window()
    top_widget->setLayout(top_layout);
    main_layout->addWidget(top_widget);
 
-   Mine_Widget *m = new Mine_Widget();
-   main_layout->addWidget(m);
+   s_mine_widget = new Mine_Widget();
+   main_layout->addWidget(s_mine_widget);
 
    QWidget *bottom_widget = new QWidget();
    QHBoxLayout *bottom_layout = new QHBoxLayout();
@@ -35,6 +40,9 @@ Main_Window::Main_Window()
    bottom_layout->addStretch();
    bottom_widget->setLayout(bottom_layout);
    main_layout->addWidget(bottom_widget);
+   connect(
+      s_reset_button, QPushButton::clicked, 
+      this, Main_Window::reset_button_click);
 }
 
 Main_Window::~Main_Window()
@@ -47,8 +55,23 @@ void display_num_bombs(int num_bombs)
    s_lcd_number->display(num_bombs);
 }
 
-void Main_Window::button_click()
+void Main_Window::reset_button_click()
 {
-   printf("Button click\n");
+   reset_game();
+   this->setWindowTitle("Minesweeper");
+   s_mine_widget->setDisabled(false);
+   s_mine_widget->update();
+}
+
+void game_win()
+{
+   s_main_window->setWindowTitle("You Win");
+   s_mine_widget->setDisabled(true);
+}
+
+void game_lose()
+{
+   s_main_window->setWindowTitle("You Lose");
+   s_mine_widget->setDisabled(true);
 }
 

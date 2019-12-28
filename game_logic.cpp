@@ -20,6 +20,17 @@ int i2d(int i, int j)
    return i + s_num_x * j;
 }
 
+static
+bool check_win()
+{
+   for (int i = 0; i < s_num_xy; i++)
+   {
+      if (!s_bombs[i] && !s_selected[i])
+         return false;
+   }
+   return true;
+}
+
 void reset_game()
 {
    srand(time(NULL));
@@ -98,6 +109,9 @@ void set_selected(int i, int j)
 
    s_selected[i2d(i,j)] = true;
 
+   if (is_bomb(i,j))
+      game_lose();
+
    if (num_adjacent(i, j) == 0)
    {
       set_selected(i-1, j-1);
@@ -109,10 +123,16 @@ void set_selected(int i, int j)
       set_selected(i+1, j+0);
       set_selected(i+1, j+1);
    }
+
+   if (check_win())
+      game_win();
 }
 
 void toggle_flagged(int i, int j)
 {
+   if (is_selected(i, j))
+      return;
+
    s_flagged[i2d(i,j)] = !s_flagged[i2d(i,j)];
 
    int num_bombs_left = 0;
