@@ -1,0 +1,7 @@
+*.Debug
+*.Release
+debug/*
+release/*
+*.swp
+*.stash
+Makefile
