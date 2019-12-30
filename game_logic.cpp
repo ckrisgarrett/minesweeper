@@ -5,21 +5,28 @@
 #include <cstdlib>
 #include <vector>
 
-static const int s_num_x = 9;
-static const int s_num_y = 9;
-static const int s_num_xy = 81;
+static const int s_num_x = 12;
+static const int s_num_y = 8;
+static const int s_num_xy = s_num_x * s_num_y;
 static const int s_num_bombs = 10;
 
 static std::vector<bool> s_bombs;
 static std::vector<bool> s_flagged;
 static std::vector<bool> s_selected;
 
+
+//----------------------------------------------------------------------
 static 
 int i2d(int i, int j)
 {
    return i + s_num_x * j;
 }
 
+
+//----------------------------------------------------------------------
+// You win if all non-bomb spots are selected.
+// Alternatively, you have not won if there is one non-bomb spot that 
+// is not selected.
 static
 bool check_win()
 {
@@ -31,6 +38,22 @@ bool check_win()
    return true;
 }
 
+
+//----------------------------------------------------------------------
+int get_num_x()
+{
+   return s_num_x;
+}
+
+
+//----------------------------------------------------------------------
+int get_num_y()
+{
+   return s_num_y;
+}
+
+
+//----------------------------------------------------------------------
 void reset_game()
 {
    srand(time(NULL));
@@ -57,6 +80,8 @@ void reset_game()
    display_num_bombs(s_num_bombs);
 }
 
+
+//----------------------------------------------------------------------
 bool is_selected(int i, int j)
 {
    if (i < 0 || j < 0 || i >= s_num_x || j >= s_num_y)
@@ -65,6 +90,8 @@ bool is_selected(int i, int j)
    return s_selected[i2d(i,j)];
 }
 
+
+//----------------------------------------------------------------------
 bool is_flagged(int i, int j)
 {
    if (i < 0 || j < 0 || i >= s_num_x || j >= s_num_y)
@@ -73,6 +100,7 @@ bool is_flagged(int i, int j)
    return s_flagged[i2d(i,j)];
 }
 
+//----------------------------------------------------------------------
 bool is_bomb(int i, int j)
 {
    if (i < 0 || j < 0 || i >= s_num_x || j >= s_num_y)
@@ -81,6 +109,8 @@ bool is_bomb(int i, int j)
    return s_bombs[i2d(i,j)];
 }
 
+
+//----------------------------------------------------------------------
 int num_adjacent(int i, int j)
 {
    if (is_bomb(i, j))
@@ -99,6 +129,8 @@ int num_adjacent(int i, int j)
    return adj;
 }
 
+
+//----------------------------------------------------------------------
 void set_selected(int i, int j)
 {
    if (i < 0 || j < 0 || i >= s_num_x || j >= s_num_y)
@@ -128,6 +160,8 @@ void set_selected(int i, int j)
       game_win();
 }
 
+
+//----------------------------------------------------------------------
 void toggle_flagged(int i, int j)
 {
    if (is_selected(i, j))

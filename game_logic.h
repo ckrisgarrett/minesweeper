@@ -1,5 +1,7 @@
 #pragma once
 
+int get_num_x();
+int get_num_y();
 void reset_game();
 bool is_selected(int i, int j);
 bool is_flagged(int i, int j);

@@ -7,6 +7,7 @@ class Mine_Widget : public QWidget
 
 public:
    Mine_Widget();
+   void reset();
 
 protected:
    void paintEvent(QPaintEvent *event) override;
@@ -15,8 +16,7 @@ protected:
    void mousePressEvent(QMouseEvent *event) override;
 
 private:
-   get_bound_x(int index);
-   get_bound_y(int index);
+   get_line_bound(int index);
    int c_button_x, c_button_y;
 };
 

@@ -4,30 +4,24 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QLCDNumber>
+#include <QLabel>
 
-static QLCDNumber *s_lcd_number;
+static QLabel *s_bombs_label;
 static Mine_Widget *s_mine_widget;
 static QPushButton *s_reset_button;
-static Main_Window *s_main_window;
 
 Main_Window::Main_Window()
 {
-   s_main_window = this;
-
    QVBoxLayout *main_layout = new QVBoxLayout();
    QWidget *central_widget = new QWidget();
    central_widget->setLayout(main_layout);
    setCentralWidget(central_widget);
 
-   QWidget *top_widget = new QWidget();
-   QHBoxLayout *top_layout = new QHBoxLayout();
-   top_layout->addStretch();
-   s_lcd_number = new QLCDNumber(2);
-   s_lcd_number->setStyleSheet("color: red; background: black;");
-   top_layout->addWidget(s_lcd_number);
-   top_layout->addStretch();
-   top_widget->setLayout(top_layout);
-   main_layout->addWidget(top_widget);
+   s_bombs_label = new QLabel();
+   QFont font;
+   font.setPointSize(12);
+   s_bombs_label->setFont(font);
+   main_layout->addWidget(s_bombs_label);
 
    s_mine_widget = new Mine_Widget();
    main_layout->addWidget(s_mine_widget);
@@ -52,12 +46,15 @@ Main_Window::~Main_Window()
 
 void display_num_bombs(int num_bombs)
 {
-   s_lcd_number->display(num_bombs);
+   char text[100];
+   sprintf(text, "Bombs not flagged: %d", num_bombs);
+   s_bombs_label->setText(text);
 }
 
 void Main_Window::reset_button_click()
 {
    reset_game();
+   s_mine_widget->reset();
    this->setWindowTitle("Minesweeper");
    s_mine_widget->setDisabled(false);
    s_mine_widget->update();
@@ -65,13 +62,13 @@ void Main_Window::reset_button_click()
 
 void game_win()
 {
-   s_main_window->setWindowTitle("You Win");
+   s_bombs_label->setText("You Win");
    s_mine_widget->setDisabled(true);
 }
 
 void game_lose()
 {
-   s_main_window->setWindowTitle("You Lose");
+   s_bombs_label->setText("You Lose");
    s_mine_widget->setDisabled(true);
 }
 
